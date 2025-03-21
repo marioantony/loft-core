@@ -75,11 +75,8 @@ function App() {
                 <Router>
                     <Box sx={{ display: "flex" }}>
                         <Sidebar open={open} handleDrawerToggle={handleDrawerToggle} />
-                        <Box
-                            component="main"
-                            sx={{ flexGrow: 100, p: 35, background: "#e3f2fd", height: "100vh" }}
-                        >
-                            <AppBar position="fixed" sx={{ width: `calc(100% - ${open ? drawerWidth : 65}px)`, ml: `${open ? drawerWidth : 65}px`, transition: "width 0.3s ease-in-out" }}>
+                        <Box component={"main"} sx={{ display: "flex", flexDirection: "column", alignItems: "stretch", minHeight: "100vh" }}>
+                        <AppBar position="fixed" sx={{ width: `calc(100% - ${open ? drawerWidth : 65}px)`, ml: `${open ? drawerWidth : 65}px`, transition: "width 0.3s ease-in-out" }}>
                                 <Toolbar>
                                     <Typography variant="h6" sx={{ flexGrow: 1 }}>
                                         Dashboard

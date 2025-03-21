@@ -10,7 +10,7 @@ const Dashboard = () => {
             {/*<Sidebar />*/}
             <Box sx={{ flexGrow: 1, height: "100vh" }}>
                 {/*<Navbar />*/}
-                {/*<Toolbar />*/}
+                <Toolbar />
                 <Container sx={{ mt: -10 }}>
                     <DashboardCards />
                 </Container>

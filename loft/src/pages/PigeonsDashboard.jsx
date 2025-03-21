@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { Box, Container, Typography, Button, Card, CardContent, Grid, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, TextField } from "@mui/material";
+import { Box, Container, Typography, Button, Card, CardContent, Grid, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, TextField, Tabs, Tab } from "@mui/material";
 
 const loggedInUser = { userType: "Pigeoner", name: "John Doe" };
 
-const pigeonsData = [
+const initialPigeons = [
     {
         id: 1,
         bloodLine: "Champion Line",
         color: "White",
         age: "2 years",
         owner: "John Doe",
+        suspended: false,
         history: {
             birthDate: "2023-01-15",
             previousOwners: [
@@ -21,31 +22,15 @@ const pigeonsData = [
                 { race: "Mountain Glide 2024", position: "3rd Place" },
             ],
         },
-    },
-    {
-        id: 2,
-        bloodLine: "Elite Flyers",
-        color: "Blue",
-        age: "3 years",
-        owner: "Mike Ross",
-        history: {
-            birthDate: "2022-05-20",
-            previousOwners: [
-                { name: "Emily Watson", ownedFrom: "2022-05-20", ownedTo: "2023-02-11" },
-                { name: "Mike Ross", ownedFrom: "2023-02-11", ownedTo: "Present" },
-            ],
-            raceDetails: [
-                { race: "Grand Pigeon Derby 2023", position: "2nd Place" },
-            ],
-        },
-    },
+    }
 ];
 
 const PigeonsDashboard = () => {
-    const [pigeons, setPigeons] = useState(pigeonsData);
+    const [pigeons, setPigeons] = useState(initialPigeons);
     const [selectedPigeon, setSelectedPigeon] = useState(null);
     const [openPopup, setOpenPopup] = useState(false);
     const [openCreatePopup, setOpenCreatePopup] = useState(false);
+    const [tabIndex, setTabIndex] = useState(0);
     const [newPigeon, setNewPigeon] = useState({ bloodLine: "", color: "", age: "", owner: loggedInUser.name });
 
     const handleViewPigeon = (pigeon) => {
@@ -59,10 +44,26 @@ const PigeonsDashboard = () => {
     };
 
     const handleCreatePigeon = () => {
+        if (!newPigeon.bloodLine || !newPigeon.color || !newPigeon.age) {
+            alert("Please fill in all fields");
+            return;
+        }
         const newId = pigeons.length + 1;
-        setPigeons([...pigeons, { id: newId, ...newPigeon, history: { birthDate: "N/A", previousOwners: [], raceDetails: [] } }]);
+        const createdPigeon = {
+            id: newId,
+            ...newPigeon,
+            suspended: false,
+            history: { birthDate: "N/A", previousOwners: [], raceDetails: [] },
+        };
+        setPigeons((prevPigeons) => [...prevPigeons, createdPigeon]);
         setOpenCreatePopup(false);
         setNewPigeon({ bloodLine: "", color: "", age: "", owner: loggedInUser.name });
+    };
+
+    const handleSuspendPigeon = (id) => {
+        setPigeons((prevPigeons) =>
+            prevPigeons.map((p) => (p.id === id ? { ...p, suspended: !p.suspended } : p))
+        );
     };
 
     return (
@@ -76,42 +77,51 @@ const PigeonsDashboard = () => {
                 )}
             </Box>
 
-            <Typography variant="h6" mt={3}>My Pigeons</Typography>
-            <Grid container spacing={3}>
-                {pigeons.filter(p => p.owner === loggedInUser.name).map((pigeon) => (
-                    <Grid item xs={12} md={6} key={pigeon.id}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h6">{pigeon.bloodLine}</Typography>
-                                <Typography variant="body2">Color: {pigeon.color}</Typography>
-                                <Typography variant="body2">Age: {pigeon.age}</Typography>
-                                <Typography variant="body2">Owner: {pigeon.owner}</Typography>
-                                <Button variant="outlined" color="secondary" onClick={() => handleViewPigeon(pigeon)} sx={{ mt: 2 }}>
-                                    View
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
+            <Tabs value={tabIndex} onChange={(e, newValue) => setTabIndex(newValue)}>
+                <Tab label="My Pigeons" />
+                <Tab label="Other Pigeons" />
+            </Tabs>
 
-            <Typography variant="h6" mt={5}>Other Pigeons</Typography>
-            <Grid container spacing={3}>
-                {pigeons.filter(p => p.owner !== loggedInUser.name).map((pigeon) => (
-                    <Grid item xs={12} md={6} key={pigeon.id}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h6">{pigeon.bloodLine}</Typography>
-                                <Typography variant="body2">Color: {pigeon.color}</Typography>
-                                <Typography variant="body2">Age: {pigeon.age}</Typography>
-                                <Typography variant="body2">Owner: {pigeon.owner}</Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
+            {tabIndex === 0 && (
+                <Grid container spacing={3} mt={2}>
+                    {pigeons.filter((p) => p.owner === loggedInUser.name).map((pigeon) => (
+                        <Grid item xs={12} md={6} key={pigeon.id}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h6">{pigeon.bloodLine}</Typography>
+                                    <Typography variant="body2">Color: {pigeon.color}</Typography>
+                                    <Typography variant="body2">Age: {pigeon.age}</Typography>
+                                    <Box display="flex" justifyContent="space-between" mt={2}>
+                                        <Button variant="outlined" color="secondary" onClick={() => handleViewPigeon(pigeon)}>View</Button>
+                                        <Button variant="contained" color={pigeon.suspended ? "error" : "warning"} onClick={() => handleSuspendPigeon(pigeon.id)}>
+                                            {pigeon.suspended ? "Un-Suspend" : "Suspend"}
+                                        </Button>
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            )}
 
-            {/* View Pigeon Popup */}
+            {tabIndex === 1 && (
+                <Grid container spacing={3} mt={2}>
+                    {pigeons.filter((p) => p.owner !== loggedInUser.name).map((pigeon) => (
+                        <Grid item xs={12} md={6} key={pigeon.id}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h6">{pigeon.bloodLine}</Typography>
+                                    <Typography variant="body2">Color: {pigeon.color}</Typography>
+                                    <Typography variant="body2">Age: {pigeon.age}</Typography>
+                                    <Typography variant="body2">Owner: {pigeon.owner}</Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+            )}
+
+            {/* View Pigeon History Popup */}
             <Dialog open={openPopup} onClose={handleClosePopup} fullWidth maxWidth="sm">
                 <DialogTitle>Pigeon History</DialogTitle>
                 <DialogContent>
@@ -139,6 +149,20 @@ const PigeonsDashboard = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClosePopup} color="primary">Close</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Create Pigeon Popup */}
+            <Dialog open={openCreatePopup} onClose={() => setOpenCreatePopup(false)} fullWidth maxWidth="sm">
+                <DialogTitle>Create New Pigeon</DialogTitle>
+                <DialogContent>
+                    <TextField fullWidth label="Pigeon Blood Line" margin="dense" value={newPigeon.bloodLine} onChange={(e) => setNewPigeon({ ...newPigeon, bloodLine: e.target.value })} />
+                    <TextField fullWidth label="Color" margin="dense" value={newPigeon.color} onChange={(e) => setNewPigeon({ ...newPigeon, color: e.target.value })} />
+                    <TextField fullWidth label="Age" margin="dense" value={newPigeon.age} onChange={(e) => setNewPigeon({ ...newPigeon, age: e.target.value })} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenCreatePopup(false)} color="secondary">Cancel</Button>
+                    <Button onClick={handleCreatePigeon} color="primary" variant="contained">Create</Button>
                 </DialogActions>
             </Dialog>
         </Container>
