@@ -10,7 +10,9 @@ import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import EventsDashboard from "./pages/EventsDashboard";
 import PigeonsDashboard from "./pages/PigeonsDashboard";
-
+import PigeonClubsDashboard from "./pages/PigeonClubsDashboard";
+import ClubDetailsView from "./pages/ClubDetailsView";
+import EventChatBox from "./pages/EventChatBox";
 const drawerWidth = 240;
 
 const theme = createTheme({
@@ -47,8 +49,9 @@ const Sidebar = ({ open, handleDrawerToggle }) => {
             </Toolbar>
             <List>
                 {[{ text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-                    { text: "Event Dashboard", icon: <DashboardIcon />, path: "/eventsdashboard" },
-                    { text: "Pigeons Dashboard", icon: <DashboardIcon />, path: "/pigeonsDashboard" },
+                    { text: "Event", icon: <DashboardIcon />, path: "/eventsdashboard" },
+                    { text: "Pigeons List", icon: <DashboardIcon />, path: "/pigeonsDashboard" },
+                    { text: "Pigeon Clubs", icon: <DashboardIcon />, path: "/clubs" },
                     { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
                     { text: "Logout", icon: <ExitToAppIcon />, path: "/" }].map((item, index) => (
                     <ListItem button key={index} component="a" href={item.path} sx={{ justifyContent: open ? "flex-start" : "center" }}>
@@ -90,6 +93,9 @@ function App() {
                                 <Route path="/dashboard" element={<Dashboard />} />
                                 <Route path="/eventsdashboard" element={<EventsDashboard />} />
                                 <Route path="/pigeonsDashboard" element={<PigeonsDashboard />} />
+                                <Route path="/clubs" element={<PigeonClubsDashboard />} />
+                                <Route path="/clubs/:id" element={<ClubDetailsView />} />
+                                <Route path="/chat/:eventId" element={<EventChatBox />} />
                             </Routes>
                         </Box>
                     </Box>
