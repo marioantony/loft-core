@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -8,6 +8,8 @@ import store from "./store/store.js";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import EventsDashboard from "./pages/EventsDashboard";
+import PigeonsDashboard from "./pages/PigeonsDashboard";
 
 const drawerWidth = 240;
 
@@ -22,33 +24,36 @@ const theme = createTheme({
     },
 });
 
-const Sidebar = () => {
+const Sidebar = ({ open, handleDrawerToggle }) => {
     return (
         <Drawer
+            variant="permanent"
             sx={{
-                width: drawerWidth,
+                width: open ? drawerWidth : 65,
                 flexShrink: 0,
+                transition: "width 0.3s ease-in-out",
                 "& .MuiDrawer-paper": {
-                    width: drawerWidth,
+                    width: open ? drawerWidth : 65,
+                    overflowX: "hidden",
                     boxSizing: "border-box",
                     background: "#fff",
                 },
             }}
-            variant="permanent"
-            anchor="left"
         >
             <Toolbar>
-                <Typography variant="h6" noWrap sx={{ padding: 2 }}>
-                    My App
-                </Typography>
+                <IconButton onClick={handleDrawerToggle} sx={{ marginLeft: open ? -2 : -3 }}>
+                    <MenuIcon />
+                </IconButton>
             </Toolbar>
             <List>
                 {[{ text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+                    { text: "Event Dashboard", icon: <DashboardIcon />, path: "/eventsdashboard" },
+                    { text: "Pigeons Dashboard", icon: <DashboardIcon />, path: "/pigeonsDashboard" },
                     { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
                     { text: "Logout", icon: <ExitToAppIcon />, path: "/" }].map((item, index) => (
-                    <ListItem button key={index} component="a" href={item.path}>
+                    <ListItem button key={index} component="a" href={item.path} sx={{ justifyContent: open ? "flex-start" : "center" }}>
                         <ListItemIcon>{item.icon}</ListItemIcon>
-                        <ListItemText primary={item.text} />
+                        {open && <ListItemText primary={item.text} />}
                     </ListItem>
                 ))}
             </List>
@@ -57,21 +62,37 @@ const Sidebar = () => {
 };
 
 function App() {
+    const [open, setOpen] = useState(true);
+
+    const handleDrawerToggle = () => {
+        setOpen(!open);
+    };
+
     return (
         <Provider store={store}>
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <Router>
                     <Box sx={{ display: "flex" }}>
-                        <Sidebar />
+                        <Sidebar open={open} handleDrawerToggle={handleDrawerToggle} />
                         <Box
                             component="main"
-                            sx={{ flexGrow: 1, p: 3, background: "#e3f2fd", height: "100vh" }}
+                            sx={{ flexGrow: 100, p: 35, background: "#e3f2fd", height: "100vh" }}
                         >
+                            <AppBar position="fixed" sx={{ width: `calc(100% - ${open ? drawerWidth : 65}px)`, ml: `${open ? drawerWidth : 65}px`, transition: "width 0.3s ease-in-out" }}>
+                                <Toolbar>
+                                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                                        Dashboard
+                                    </Typography>
+                                </Toolbar>
+                            </AppBar>
+                            <Toolbar />
                             <Routes>
                                 <Route path="/" element={<Login />} />
                                 <Route path="/signup" element={<Signup />} />
                                 <Route path="/dashboard" element={<Dashboard />} />
+                                <Route path="/eventsdashboard" element={<EventsDashboard />} />
+                                <Route path="/pigeonsDashboard" element={<PigeonsDashboard />} />
                             </Routes>
                         </Box>
                     </Box>

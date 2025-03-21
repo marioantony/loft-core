@@ -1,12 +1,19 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
-import Sidebar from "../layouts/Sidebar.jsx";
+import { Box, Toolbar, Container } from "@mui/material";
+import Sidebar from "../layouts/Sidebar";
+import Navbar from "../layouts/Navbar";
+import DashboardCards from "../components/DashboardCards";
 
 const Dashboard = () => {
     return (
-        <Box sx={{ display: "flex" }}>
-            <Box sx={{ flexGrow: 1, p: 3 }}>
-                <Typography variant="h4">Dashboard</Typography>
+        <Box sx={{ display: "inline-block", height: "100vh", bgcolor: "#e3f2fd" }}>
+            {/*<Sidebar />*/}
+            <Box sx={{ flexGrow: 1, height: "100vh" }}>
+                {/*<Navbar />*/}
+                {/*<Toolbar />*/}
+                <Container sx={{ mt: -10 }}>
+                    <DashboardCards />
+                </Container>
             </Box>
         </Box>
     );
