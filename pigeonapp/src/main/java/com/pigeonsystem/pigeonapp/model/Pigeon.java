@@ -21,6 +21,9 @@ public class Pigeon {
     @Column(name = "suspended")
     private Boolean suspended = false;
 
+    @Column(unique = true)
+    private String qrToken;
+
 
     // Getters and Setters
 
@@ -34,6 +37,14 @@ public class Pigeon {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public String getQrToken() {
+        return qrToken;
+    }
+
+    public void setQrToken(String qrToken) {
+        this.qrToken = qrToken;
+    }
 
     public String getBloodLine() { return bloodLine; }
     public void setBloodLine(String bloodLine) { this.bloodLine = bloodLine; }

@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/pigeons")
@@ -27,7 +28,9 @@ public class PigeonController {
     @PostMapping("/create")
     public Pigeon create(@RequestBody PigeonRequest request) {
         Users owner = userRepository.findById(request.getOwnerId()).orElseThrow();
+        String token = "PIGEON-" + UUID.randomUUID().toString();
         Pigeon pigeon = new Pigeon();
+        pigeon.setQrToken(token);
         pigeon.setBloodLine(request.getBloodLine());
         pigeon.setColor(request.getColor());
         pigeon.setAge(request.getAge());

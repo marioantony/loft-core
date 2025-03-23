@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface PigeonRepository extends JpaRepository<Pigeon, Long> {
     List<Pigeon> findByOwnerId(Long ownerId);
+    Pigeon findByQrToken(String qrToken);
 }

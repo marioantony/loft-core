@@ -43,8 +43,10 @@ public class ScanLogController {
 
     @PostMapping
     public ScanLog logArrival(@RequestBody ScanRequest request) {
-        Pigeon pigeon = pigeonRepository.findById(request.getPigeonId())
-                .orElseThrow(() -> new RuntimeException("Pigeon not found"));
+        Pigeon pigeon = pigeonRepository.findByQrToken(request.getQrToken());
+        if (pigeon == null) {
+            throw new RuntimeException("Pigeon with QR token not found");
+        }
         Event event = eventRepository.findById(request.getEventId())
                 .orElseThrow(() -> new RuntimeException("Event not found"));
 

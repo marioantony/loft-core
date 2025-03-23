@@ -5,8 +5,16 @@ public class ScanRequest {
     private Long eventId;
     private Double arrivalLat;
     private Double arrivalLng;
+    private String qrToken;
 
     // Getters & Setters
+    public String getQrToken() {
+        return qrToken;
+    }
+
+    public void setQrToken(String qrToken) {
+        this.qrToken = qrToken;
+    }
 
     public Long getPigeonId() {
         return pigeonId;
