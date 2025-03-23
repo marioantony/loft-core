@@ -46,4 +46,12 @@ public class Participation {
     public void setConfirmed(boolean confirmed) {
         this.confirmed = confirmed;
     }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 }

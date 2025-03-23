@@ -61,4 +61,18 @@ public class EventController {
         return eventRepository.save(event);
     }
 
+    @PutMapping("/{eventId}/complete")
+    public Event completeEvent(@PathVariable Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        if (event.getCompleted() != null && event.getCompleted()) {
+            throw new RuntimeException("Event already completed");
+        }
+
+        event.setCompleted(true);
+        return eventRepository.save(event);
+    }
+
+
 }

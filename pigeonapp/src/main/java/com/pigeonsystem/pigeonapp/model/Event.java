@@ -21,6 +21,8 @@ public class Event {
     private LocalDateTime startedAt;
     private Double startLocationLat;
     private Double startLocationLng;
+    private Boolean completed = false;
+
 
 
     @ManyToOne
@@ -28,6 +30,14 @@ public class Event {
     private Users createdBy;
 
     // Getters & Setters
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(Boolean completed) {
+        this.completed = completed;
+    }
 
     public String getTitle() {
         return title;
@@ -92,5 +102,13 @@ public class Event {
     public void setStartLocationLng(Double startLocationLng) {
         this.startLocationLng = startLocationLng;
     }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
 }
