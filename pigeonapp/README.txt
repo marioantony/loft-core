@@ -1,0 +1,1 @@
+Spring Boot 2.7.x Pigeon Management System - Base Project Placeholder
