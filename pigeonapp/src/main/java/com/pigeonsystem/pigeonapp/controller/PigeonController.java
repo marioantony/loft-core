@@ -56,4 +56,22 @@ public class PigeonController {
         return pigeonRepository.save(pigeon);
     }
 
+    @GetMapping("/owner/{ownerId}")
+    public List<Pigeon> getByOwnerId(@PathVariable Long ownerId) {
+        return pigeonRepository.findByOwnerId(ownerId);
+    }
+
+    @PutMapping("/{id}/toggle-suspend")
+    public Pigeon toggleSuspend(@PathVariable Long id) {
+        Pigeon pigeon = pigeonRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pigeon not found"));
+
+        Boolean isSuspended = pigeon.getSuspended() != null && pigeon.getSuspended();
+        pigeon.setSuspended(!isSuspended);
+
+        return pigeonRepository.save(pigeon);
+    }
+
+
+
 }

@@ -18,7 +18,19 @@ public class Pigeon {
     @JoinColumn(name = "owner_id")
     private Users owner;
 
+    @Column(name = "suspended")
+    private Boolean suspended = false;
+
+
     // Getters and Setters
+
+    public Boolean getSuspended() {
+        return suspended;
+    }
+
+    public void setSuspended(Boolean suspended) {
+        this.suspended = suspended;
+    }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
