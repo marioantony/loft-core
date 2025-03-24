@@ -62,7 +62,7 @@ import java.util.List;
 
         String token = jwtUtil.generateToken(user.getEmail());
 
-        return new LoginResponse(token, user.getName(), user.getRole());
+        return new LoginResponse(token, user.getName(), user.getRole(), user.getId());
     }
 
 }

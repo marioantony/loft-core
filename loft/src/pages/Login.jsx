@@ -21,8 +21,9 @@ const Login = () => {
             localStorage.setItem('jwtToken', res.data.token);
             localStorage.setItem('userRole', res.data.role);
             localStorage.setItem('userName', res.data.name);
+            localStorage.setItem('userId', res.data.id);
 
-            if (res.data.role === 'CLUB') navigate('/club-dashboard');
+            if (res.data.role === 'CLUB') navigate('/dashboard');
             else navigate('/dashboard');
         } catch (err) {
             alert('Login failed');

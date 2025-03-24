@@ -7,6 +7,7 @@ com/pigeonsystem/pigeonapp/dto/ScanRequest.class
 com/pigeonsystem/pigeonapp/util/JwtUtil.class
 com/pigeonsystem/pigeonapp/dto/RaceResult.class
 com/pigeonsystem/pigeonapp/controller/ScanLogController.class
+com/pigeonsystem/pigeonapp/config/CorsConfig$1.class
 com/pigeonsystem/pigeonapp/model/Event.class
 com/pigeonsystem/pigeonapp/PigeonappApplication.class
 com/pigeonsystem/pigeonapp/model/ScanLog.class
@@ -17,6 +18,7 @@ com/pigeonsystem/pigeonapp/repository/UserRepository.class
 com/pigeonsystem/pigeonapp/repository/EventRepository.class
 com/pigeonsystem/pigeonapp/model/Pigeon.class
 com/pigeonsystem/pigeonapp/repository/ParticipationRepository.class
+com/pigeonsystem/pigeonapp/config/CorsConfig.class
 com/pigeonsystem/pigeonapp/model/Participation.class
 com/pigeonsystem/pigeonapp/dto/EventRequest.class
 com/pigeonsystem/pigeonapp/controller/UserController.class
