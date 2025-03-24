@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import API from '../utils/api.js';
 import { Container, TextField, Button, Typography, Box } from "@mui/material";
 import { Link,useNavigate } from "react-router-dom";
@@ -8,6 +8,13 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const token = localStorage.getItem('jwtToken');
+        if (token) {
+            navigate('/dashboard'); // or role-specific
+        }
+    }, []);
+
     const handleLogin = async () => {
         try {
             const res = await API.post('/users/login', { email, password });
@@ -16,7 +23,7 @@ const Login = () => {
             localStorage.setItem('userName', res.data.name);
 
             if (res.data.role === 'CLUB') navigate('/club-dashboard');
-            else navigate('/pigeoner-dashboard');
+            else navigate('/dashboard');
         } catch (err) {
             alert('Login failed');
         }
@@ -32,7 +39,7 @@ const Login = () => {
                     Login
                 </Button>
                 <Typography sx={{ mt: 2 }}>
-                    Don't have an account? <Link to="/src/pages/Signup">Sign up</Link>
+                    Don't have an account? <Link to="/Signup">Sign up</Link>
                 </Typography>
             </Box>
         </Container>

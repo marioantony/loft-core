@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Container, TextField, Button, Typography, Box, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../utils/api.js";
@@ -10,6 +10,13 @@ const Signup = () => {
     const [role, setRole] = useState('PIGEONER'); // or default CLUB if needed
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('jwtToken');
+        if (token) {
+            navigate('/dashboard'); // or role-specific
+        }
+    }, []);
 
     const handleSignup = async () => {
         try {
