@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, Container, Box, Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, AppBar, Typography, IconButton } from "@mui/material";
@@ -27,6 +27,14 @@ const theme = createTheme({
 });
 
 const Sidebar = ({ open, handleDrawerToggle }) => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('userName');
+        navigate('/');
+    };
     return (
         <Drawer
             variant="permanent"
@@ -54,7 +62,7 @@ const Sidebar = ({ open, handleDrawerToggle }) => {
                     { text: "Pigeon Clubs", icon: <DashboardIcon />, path: "/clubs" },
                     { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
                     { text: "Logout", icon: <ExitToAppIcon />, path: "/" }].map((item, index) => (
-                    <ListItem button key={index} component="a" href={item.path} sx={{ justifyContent: open ? "flex-start" : "center" }}>
+                    <ListItem button key={index} component="a" href={item.path} sx={{ justifyContent: open ? "flex-start" : "center" }} onClick={handleLogout}>
                         <ListItemIcon>{item.icon}</ListItemIcon>
                         {open && <ListItemText primary={item.text} />}
                     </ListItem>
