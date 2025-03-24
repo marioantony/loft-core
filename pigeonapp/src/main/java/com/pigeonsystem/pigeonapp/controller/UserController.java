@@ -1,5 +1,6 @@
 package com.pigeonsystem.pigeonapp.controller;
 
+import com.pigeonsystem.pigeonapp.dto.LoginRequest;
 import com.pigeonsystem.pigeonapp.model.Users;
 import com.pigeonsystem.pigeonapp.repository.UserRepository;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,20 @@ import java.util.List;
         return userRepo.save(users);
         }
 
-        @GetMapping
+@GetMapping
         public List<Users> getAll() {
         return userRepo.findAll();
         }
+
+ @PostMapping("/login")
+        public Users login(@RequestBody LoginRequest request) {
+                Users user = userRepo.findByEmail(request.getEmail());
+
+                if (user == null || !user.getPassword().equals(request.getPassword())) {
+                        throw new RuntimeException("Invalid email or password");
+                }
+
+                return user; // You can later return a token instead
         }
+}
+

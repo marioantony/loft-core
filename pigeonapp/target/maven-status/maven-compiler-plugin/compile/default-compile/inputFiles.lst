@@ -1,6 +1,7 @@
 /Users/marioantony/Documents/project2/loft-core/pigeonapp/src/main/java/com/pigeonsystem/pigeonapp/repository/PigeonRepository.java
 /Users/marioantony/Documents/project2/loft-core/pigeonapp/src/main/java/com/pigeonsystem/pigeonapp/PigeonappApplication.java
 /Users/marioantony/Documents/project2/loft-core/pigeonapp/src/main/java/com/pigeonsystem/pigeonapp/controller/ScanLogController.java
+/Users/marioantony/Documents/project2/loft-core/pigeonapp/src/main/java/com/pigeonsystem/pigeonapp/dto/LoginRequest.java
 /Users/marioantony/Documents/project2/loft-core/pigeonapp/src/main/java/com/pigeonsystem/pigeonapp/repository/ScanLogRepository.java
 /Users/marioantony/Documents/project2/loft-core/pigeonapp/src/main/java/com/pigeonsystem/pigeonapp/controller/EventController.java
 /Users/marioantony/Documents/project2/loft-core/pigeonapp/src/main/java/com/pigeonsystem/pigeonapp/dto/ParticipationRequest.java

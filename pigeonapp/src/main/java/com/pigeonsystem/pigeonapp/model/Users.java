@@ -12,6 +12,8 @@ public class Users {
 
     private String name;
 
+    private String password;
+
     @Column(unique = true)
     private String email;
 
@@ -26,6 +28,9 @@ public class Users {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
     public String getName() {
         return name;
