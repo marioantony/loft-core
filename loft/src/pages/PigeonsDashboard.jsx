@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Box, Container, Typography, Button, Card, CardContent, Grid, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, TextField, Tabs, Tab } from "@mui/material";
-
+import API from "../utils/api.js"
 const loggedInUser = { userType: "Pigeoner", name: "John Doe" };
 
 const initialPigeons = [
@@ -26,7 +26,8 @@ const initialPigeons = [
 ];
 
 const PigeonsDashboard = () => {
-    const [pigeons, setPigeons] = useState(initialPigeons);
+    const [pigeons, setPigeons] = useState([]);
+    const [allPigeons, setAllPigeons] = useState([])
     const [selectedPigeon, setSelectedPigeon] = useState(null);
     const [openPopup, setOpenPopup] = useState(false);
     const [openCreatePopup, setOpenCreatePopup] = useState(false);
@@ -43,29 +44,92 @@ const PigeonsDashboard = () => {
         setSelectedPigeon(null);
     };
 
-    const handleCreatePigeon = () => {
+    // const handleCreatePigeon = () => {
+    //     if (!newPigeon.bloodLine || !newPigeon.color || !newPigeon.age) {
+    //         alert("Please fill in all fields");
+    //         return;
+    //     }
+    //     const newId = pigeons.length + 1;
+    //     const createdPigeon = {
+    //         id: newId,
+    //         ...newPigeon,
+    //         suspended: false,
+    //         history: { birthDate: "N/A", previousOwners: [], raceDetails: [] },
+    //     };
+    //     setPigeons((prevPigeons) => [...prevPigeons, createdPigeon]);
+    //     setOpenCreatePopup(false);
+    //     setNewPigeon({ bloodLine: "", color: "", age: "", owner: loggedInUser.name });
+    // };
+
+    const handleCreatePigeon = async () => {
+        const ownerId = localStorage.getItem("userId");
         if (!newPigeon.bloodLine || !newPigeon.color || !newPigeon.age) {
             alert("Please fill in all fields");
             return;
         }
-        const newId = pigeons.length + 1;
-        const createdPigeon = {
-            id: newId,
-            ...newPigeon,
-            suspended: false,
-            history: { birthDate: "N/A", previousOwners: [], raceDetails: [] },
+
+        try {
+            await API.post("/pigeons/create", {
+                bloodLine: newPigeon.bloodLine,
+                color: newPigeon.color,
+                age: newPigeon.age,
+                ownerId: ownerId,
+            });
+
+            alert("Pigeon created successfully!");
+            setNewPigeon({ bloodLine: "", color: "", age: "" });
+            setOpenCreatePopup(false);
+
+            // Refresh list
+            const response = await API.get(`/pigeons/owner/${ownerId}`);
+            setPigeons(response.data);
+        } catch (error) {
+            console.error("Error creating pigeon:", error);
+            alert("Failed to create pigeon.");
+        }
+    };
+    
+    const handleSuspendPigeon = async (id) => {
+        try {
+            await API.put(`/pigeons/${id}/toggle-suspend`);
+            const ownerId = localStorage.getItem("userId");
+            const res = await API.get(`/pigeons/owner/${ownerId}`);
+            setPigeons(res.data);
+        } catch (error) {
+            console.error("Error toggling suspend:", error);
+        }
+    };
+
+
+
+    useEffect(() => {
+        const fetchPigeons = async () => {
+            try {
+                const ownerId = localStorage.getItem("userId");
+                const response = await API.get(`/pigeons/owner/${ownerId}`);
+                setPigeons(response.data);
+            } catch (error) {
+                console.error("Error fetching pigeons:", error);
+            }
         };
-        setPigeons((prevPigeons) => [...prevPigeons, createdPigeon]);
-        setOpenCreatePopup(false);
-        setNewPigeon({ bloodLine: "", color: "", age: "", owner: loggedInUser.name });
-    };
 
-    const handleSuspendPigeon = (id) => {
-        setPigeons((prevPigeons) =>
-            prevPigeons.map((p) => (p.id === id ? { ...p, suspended: !p.suspended } : p))
-        );
-    };
+        fetchPigeons();
+    }, []);
 
+    useEffect(() => {
+        const fetchAllPigeons = async () => {
+            try {
+                const res = await API.get("/pigeons");
+                setAllPigeons(res.data);
+            } catch (err) {
+                console.error("Error fetching all pigeons:", err);
+            }
+        };
+        fetchAllPigeons();
+    }, []);
+    const createdBy = localStorage.getItem('userId');
+    const ownerId = Number(localStorage.getItem("userId"));
+    console.log(allPigeons.filter((a) => a.owner.id === ownerId),'pigeonspigeons');
     return (
         <Container sx={{ mt: 4 }}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -84,7 +148,7 @@ const PigeonsDashboard = () => {
 
             {tabIndex === 0 && (
                 <Grid container spacing={3} mt={2}>
-                    {pigeons.filter((p) => p.owner === loggedInUser.name).map((pigeon) => (
+                    {pigeons.filter((p) => String(p.owner.id === createdBy)).map((pigeon) => (
                         <Grid item xs={12} md={6} key={pigeon.id}>
                             <Card>
                                 <CardContent>
@@ -106,14 +170,14 @@ const PigeonsDashboard = () => {
 
             {tabIndex === 1 && (
                 <Grid container spacing={3} mt={2}>
-                    {pigeons.filter((p) => p.owner !== loggedInUser.name).map((pigeon) => (
+                    {allPigeons.filter((p) => String(p.owner.id !== ownerId)).map((pigeon) => (
                         <Grid item xs={12} md={6} key={pigeon.id}>
                             <Card>
                                 <CardContent>
                                     <Typography variant="h6">{pigeon.bloodLine}</Typography>
                                     <Typography variant="body2">Color: {pigeon.color}</Typography>
                                     <Typography variant="body2">Age: {pigeon.age}</Typography>
-                                    <Typography variant="body2">Owner: {pigeon.owner}</Typography>
+                                    <Typography variant="body2">Owner: {pigeon.owner.name}</Typography>
                                 </CardContent>
                             </Card>
                         </Grid>
