@@ -7,6 +7,7 @@ public class RaceResult {
     private double speedMetersPerMin;
     private Long ownerId;
     private String ownerName;
+    private int position;
 
     public RaceResult(Long pigeonId, String bloodLine, String color, double speedMetersPerMin, Long ownerId, String ownerName) {
         this.pigeonId = pigeonId;
@@ -26,6 +27,9 @@ public class RaceResult {
     public void setPigeonId(Long pigeonId) {
         this.pigeonId = pigeonId;
     }
+
+    public int getPosition() { return position; }
+    public void setPosition(int position) { this.position = position; }
 
     public String getBloodLine() {
         return bloodLine;

@@ -104,6 +104,11 @@ public class ScanLogController {
         }
 
         results.sort(Comparator.comparingDouble(RaceResult::getSpeedMetersPerMin).reversed());
+        // Assign positions
+        for (int i = 0; i < results.size(); i++) {
+            results.get(i).setPosition(i + 1);
+        }
+
         return results;
     }
 
@@ -117,8 +122,7 @@ public class ScanLogController {
 
         List<ScanLog> logs = scanLogRepository.findByEventIdOrderByArrivalTimeAsc(eventId);
 
-        PrintWriter writer = response.getWriter();
-        writer.println("Pigeon ID,Bloodline,Color,Owner ID,Owner Name,Speed (m/min)");
+        List<RaceResult> results = new ArrayList<>();
 
         for (ScanLog scan : logs) {
             double distance = GeoUtils.calculateDistanceMeters(
@@ -131,20 +135,42 @@ public class ScanLogController {
             long minutes = java.time.Duration.between(event.getStartedAt(), scan.getArrivalTime()).toMinutes();
             double speed = minutes > 0 ? distance / minutes : 0;
 
-            writer.printf(
-                    "%d,%s,%s,%d,%s,%.2f%n",
+            results.add(new RaceResult(
                     scan.getPigeon().getId(),
                     scan.getPigeon().getBloodLine(),
                     scan.getPigeon().getColor(),
+                    speed,
                     scan.getPigeon().getOwner().getId(),
-                    scan.getPigeon().getOwner().getName(),
-                    speed
+                    scan.getPigeon().getOwner().getName()
+            ));
+        }
+
+        // Sort by speed (desc) and assign position
+        results.sort(Comparator.comparingDouble(RaceResult::getSpeedMetersPerMin).reversed());
+        for (int i = 0; i < results.size(); i++) {
+            results.get(i).setPosition(i + 1);
+        }
+
+        PrintWriter writer = response.getWriter();
+        writer.println("Position,Pigeon ID,Bloodline,Color,Owner ID,Owner Name,Speed (m/min)");
+
+        for (RaceResult r : results) {
+            writer.printf(
+                    "%d,%d,%s,%s,%d,%s,%.2f%n",
+                    r.getPosition(),
+                    r.getPigeonId(),
+                    r.getBloodLine(),
+                    r.getColor(),
+                    r.getOwnerId(),
+                    r.getOwnerName(),
+                    r.getSpeedMetersPerMin()
             );
         }
 
         writer.flush();
         writer.close();
     }
+
 
 
     @GetMapping("/history/{pigeonId}")
