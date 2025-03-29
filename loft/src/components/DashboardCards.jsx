@@ -13,7 +13,7 @@ const DashboardCards = () => {
         <Grid container spacing={3}>
             {stats.map((stat, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
-                    <Card sx={{ background: "#f5f5f5", borderRadius: 3 }}>
+                    <Card sx={{ background: "#e3f2fd", borderRadius: 3 }}>
                         <CardContent>
                             <Typography variant="h6" color="primary">{stat.title}</Typography>
                             <Typography variant="h4" fontWeight="bold">{stat.value}</Typography>

@@ -1,5 +1,5 @@
 import React from "react";
-import {Route, Routes, useLocation, useNavigate} from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import {
     AppBar,
     Box,
@@ -10,7 +10,6 @@ import {
     ListItemIcon,
     ListItemText,
     Toolbar,
-    Typography
 } from "@mui/material";
 import Login from "../pages/Login.jsx";
 import Signup from "../pages/Signup.jsx";
@@ -21,23 +20,30 @@ import PigeonsDashboard from "../pages/PigeonsDashboard.jsx";
 import PigeonClubsDashboard from "../pages/PigeonClubsDashboard.jsx";
 import ClubDetailsView from "../pages/ClubDetailsView.jsx";
 import EventChatBox from "../pages/EventChatBox.jsx";
-const drawerWidth = 240;
+
 import {
     Dashboard as DashboardIcon,
+    EmojiEvents,
+    FeaturedPlayList,
+    AllInclusive,
+    Settings as SettingsIcon,
     ExitToApp as ExitToAppIcon,
     Menu as MenuIcon,
-    Settings as SettingsIcon
 } from "@mui/icons-material";
+
+const drawerWidth = 240;
 
 const Sidebar = ({ open, handleDrawerToggle }) => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem('jwtToken');
-        localStorage.removeItem('userRole');
-        localStorage.removeItem('userName');
-        navigate('/');
+        localStorage.removeItem("jwtToken");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("userId");
+        navigate("/");
     };
+
     return (
         <Drawer
             variant="permanent"
@@ -59,13 +65,25 @@ const Sidebar = ({ open, handleDrawerToggle }) => {
                 </IconButton>
             </Toolbar>
             <List>
-                {[{ text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-                    { text: "Event", icon: <DashboardIcon />, path: "/eventsdashboard" },
-                    { text: "Pigeons List", icon: <DashboardIcon />, path: "/pigeonsDashboard" },
-                    { text: "Pigeon Clubs", icon: <DashboardIcon />, path: "/clubs" },
+                {[
+                    { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+                    { text: "Event", icon: <EmojiEvents />, path: "/eventsdashboard" },
+                    { text: "Pigeons List", icon: <FeaturedPlayList />, path: "/pigeonsDashboard" },
+                    { text: "Pigeon Clubs", icon: <AllInclusive />, path: "/clubs" },
                     { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
-                    { text: "Logout", icon: <ExitToAppIcon onClick={handleLogout} />, path: "/" }].map((item, index) => (
-                    <ListItem button key={index} component="a" href={item.path} sx={{ justifyContent: open ? "flex-start" : "center" }}>
+                    {
+                        text: "Logout",
+                        icon: <ExitToAppIcon onClick={handleLogout} />,
+                        path: "/",
+                    },
+                ].map((item, index) => (
+                    <ListItem
+                        button
+                        key={index}
+                        component="a"
+                        href={item.path}
+                        sx={{ justifyContent: open ? "flex-start" : "center" }}
+                    >
                         <ListItemIcon>{item.icon}</ListItemIcon>
                         {open && <ListItemText primary={item.text} />}
                     </ListItem>
@@ -74,13 +92,14 @@ const Sidebar = ({ open, handleDrawerToggle }) => {
         </Drawer>
     );
 };
+
 function AppContent({ open, handleDrawerToggle }) {
     const location = useLocation();
-    const noLayoutRoutes = ['/', '/signup'];
-    const showLayout = !noLayoutRoutes.includes(location.pathname);
+    const noLayoutRoutes = ["/", "/signup"];
+    const showLayout = !noLayoutRoutes.includes(location.pathname.toLowerCase());
 
     return (
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", width: "100vw" }}>
             {showLayout && (
                 <>
                     <Sidebar open={open} handleDrawerToggle={handleDrawerToggle} />
@@ -92,47 +111,31 @@ function AppContent({ open, handleDrawerToggle }) {
                             transition: "width 0.3s ease-in-out",
                         }}
                     >
-                        {/*<Toolbar>*/}
-                        {/*    <Typography variant="h6" sx={{ flexGrow: 1 }}>*/}
-                        {/*        Dashboard*/}
-                        {/*    </Typography>*/}
-                        {/*</Toolbar>*/}
+                        {/*<Toolbar />*/}
                     </AppBar>
                     <Toolbar />
                 </>
             )}
 
             <Box
-                component={"main"}
+                component="main"
                 sx={{
+                    flexGrow: 1,
+                    width: "100%",
+                    minHeight: "100vh",
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "stretch",
-                    minHeight: "100vh",
-                    width: "100%", // ensure full width when sidebar hidden
                 }}
             >
                 <Routes>
                     <Route path="/" element={<Login />} />
                     <Route path="/signup" element={<Signup />} />
-                    <Route path="/dashboard" element={
-                        <ProtectedRoute><Dashboard /></ProtectedRoute>
-                    } />
-                    <Route path="/eventsdashboard" element={
-                        <ProtectedRoute><EventsDashboard /></ProtectedRoute>
-                    } />
-                    <Route path="/pigeonsDashboard" element={
-                        <ProtectedRoute><PigeonsDashboard /></ProtectedRoute>
-                    } />
-                    <Route path="/clubs" element={
-                        <ProtectedRoute><PigeonClubsDashboard /></ProtectedRoute>
-                    } />
-                    <Route path="/clubs/:id" element={
-                        <ProtectedRoute><ClubDetailsView /></ProtectedRoute>
-                    } />
-                    <Route path="/chat/:eventId" element={
-                        <ProtectedRoute><EventChatBox /></ProtectedRoute>
-                    } />
+                    <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                    <Route path="/eventsdashboard" element={<ProtectedRoute><EventsDashboard /></ProtectedRoute>} />
+                    <Route path="/pigeonsDashboard" element={<ProtectedRoute><PigeonsDashboard /></ProtectedRoute>} />
+                    <Route path="/clubs" element={<ProtectedRoute><PigeonClubsDashboard /></ProtectedRoute>} />
+                    <Route path="/clubs/:id" element={<ProtectedRoute><ClubDetailsView /></ProtectedRoute>} />
+                    <Route path="/chat/:eventId" element={<ProtectedRoute><EventChatBox /></ProtectedRoute>} />
                 </Routes>
             </Box>
         </Box>

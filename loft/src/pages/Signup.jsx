@@ -1,5 +1,16 @@
 import React, {useEffect, useState} from "react";
-import { Container, TextField, Button, Typography, Box, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
+import {
+    Container,
+    TextField,
+    Button,
+    Typography,
+    Box,
+    MenuItem,
+    Select,
+    InputLabel,
+    FormControl,
+    Grid
+} from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../utils/api.js";
 
@@ -35,6 +46,32 @@ const Signup = () => {
     };
 
     return (
+        <Grid container sx={{ minHeight: "100vh" }}>
+            {/* Left Side - Image */}
+            <Grid
+                item
+                xs={12}
+                md={6}
+                sx={{
+                    backgroundImage: 'url(https://t4.ftcdn.net/jpg/03/55/30/83/360_F_355308363_zMt8UmDC0n6XTqYMGQFawzduQFS4ENJ4.jpg)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    display: { xs: 'none', md: 'block' },
+                }}
+            />
+
+            {/* Right Side - Login Form */}
+            <Grid
+                item
+                xs={12}
+                md={6}
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    px: 3,
+                }}
+            >
         <Container maxWidth="xs">
             <Box sx={{ mt: 10, textAlign: "center" }}>
                 <Typography variant="h4">Sign Up</Typography>
@@ -93,6 +130,8 @@ const Signup = () => {
                 </Typography>
             </Box>
         </Container>
+            </Grid>
+        </Grid>
     );
 };
 

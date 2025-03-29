@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import { Box, Container, Typography, Button, Card, CardContent, Grid, Dialog, DialogTitle, DialogContent, DialogActions, List, ListItem, ListItemText, TextField, Tabs, Tab } from "@mui/material";
 import API from "../utils/api.js"
 const loggedInUser = { userType: "Pigeoner", name: "John Doe" };
+import { QRCode } from "react-qrcode-logo";
 
 const initialPigeons = [
     {
@@ -116,7 +117,22 @@ const PigeonsDashboard = () => {
         fetchPigeons();
     }, []);
 
-    useEffect(() => {
+        // useEffect(() => {
+        //     const fetchPigeons = async () => {
+        //         const ownerId = localStorage.getItem("userId");
+        //         const response = await API.get(`/pigeons/owner/${ownerId}`);
+        //         const pigeonsWithQR = await Promise.all(response.data.map(async (pigeon) => {
+        //             const qrImage = await generateQrImage(pigeon.qrToken);
+        //             return { ...pigeon, qrImage };
+        //         }));
+        //         setPigeons(pigeonsWithQR);
+        //     };
+        //
+        //     fetchPigeons();
+        // }, []);
+
+
+        useEffect(() => {
         const fetchAllPigeons = async () => {
             try {
                 const res = await API.get("/pigeons");
@@ -156,6 +172,12 @@ const PigeonsDashboard = () => {
                                     <Typography variant="body2">Color: {pigeon.color}</Typography>
                                     <Typography variant="body2">Age: {pigeon.age}</Typography>
                                     <Box display="flex" justifyContent="space-between" mt={2}>
+                                        {/*{pigeon.qrImage && (*/}
+                                        {/*    <img src={pigeon.qrImage} alt="QR Code" width="100" />*/}
+                                        {/*)}*/}
+                                        {/*<QRCode value={pigeon.qrToken} size={128} />*/}
+                                        {/*<Typography variant="body2" mt={1}><strong>QR Token:</strong> {pigeon.qrToken}</Typography>*/}
+
                                         <Button variant="outlined" color="secondary" onClick={() => handleViewPigeon(pigeon)}>View</Button>
                                         <Button variant="contained" color={pigeon.suspended ? "error" : "warning"} onClick={() => handleSuspendPigeon(pigeon.id)}>
                                             {pigeon.suspended ? "Un-Suspend" : "Suspend"}
